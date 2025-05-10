@@ -13,17 +13,17 @@ function FeatureToggle(featureName,isEnabled,userGroupAccess){
 
 FeatureToggle.prototype.canAccess = function(userRole){
 if (userRole == "betaTesters" && userRole == "admins"){
-    return this.isEnabled[1];
+    return true;
      
 }
 else 
 {
-    return this.isEnabled[2]
+    return false
 }
 }
 
 FeatureToggle.prototype.toggleFeature = function (flag) {
-if (this.userGroupAccess !== "betaTesters" && this.userGroupAccess !== "admins"){
+if (flag !== "betaTesters" && flag !== "admins"){
     console.log("You cannot access");
     
 }
@@ -35,10 +35,32 @@ else
 
 }
 
+FeatureToggle.prototype.accessSimulator = function(){
+    this.userGroupAccess.forEach(role =>{
+    switch (role){
+        case "admins":
+            console.log("Access granted: Admin privileges")
+            break;
+
+        case "betaTesters":
+            console.log("Access granted: Beta Testers privileges")
+            break;
+             
+        default :
+            console.log("Access denied: Unknown role");
+            break;
+            
+}})
+};
+
 
 const featuretoggle = new FeatureToggle("Login",[true, false],["betaTesters","admins"]);
 
-console.log(featuretoggle.canAccess("admins"));
+console.log(featuretoggle.canAccess("betaTesters"));
+console.log(featuretoggle.toggleFeature("admin"));
+console.log(featuretoggle.accessSimulator());
+
+
 
 
 // In a freelancer time-tracking platform, create a TimeLog constructor function with properties: freelancerName (string), 
@@ -55,20 +77,18 @@ function TimeLog (freelancerName,projectDetails,logs){
 
 TimeLog.prototype.totalEarnings = function(){
 
-let earnings = Object.values(this.logs);
-    earnings.forEach(log => {
-let total = log[hoursWorked]
-return  total
-} )
+// let earnings = Object.values(this.logs);
+//     earnings.forEach(log => {
+// let total = log[hoursWorked]
+let total = this.projectDetails.hourlyRate * this.logs.hoursWorked
+
+return  this.logs.hoursWorked
+// } )
     
 
 }
 
-
-
-
-
-// TimeLog.prototype.filter = function(){
+TimeLog.prototype.filter = function(){
 //     const startDate = new Date('02/02/2025');
 // const endDate = new Date('09/12/2025');
 
@@ -76,10 +96,20 @@ return  total
 //   const itemDate = new Date(item.date);
 //   return itemDate >= startDate && itemDate <= endDate;
 // }
-// );
 
 
-// }
+let now = new Date();
+  let yesterday =new Date(new Date().getTime() - (1 * 24 * 60 * 60 * 1000));
+  let last7Days=new Date(new Date().getTime() - (7 * 24 * 60 * 60 * 1000));
+  var data = this.logs.filter(p => new Date(p.LastSeenDate) <= yesterday && new Date(p.LastSeenDate) >= last3Days);  
+
+
+
+
+
+
+};
+
 
 TimeLog.prototype.workHours = function(){
 if(this.hoursWorked>40){
@@ -92,13 +122,11 @@ else{
 }
 }
 
-
-
 const log = new TimeLog("Martin",{name:"Jane",hourlyRate:20},[{date:"02/02/2025", hoursWorked:5},{date:"03/11/2025", hoursWorked:5},{date:"09/12/2025", hoursWorked:6}])
 
 console.log(log.totalEarnings());
-// console.log(log.filter());
-// console.log(log.workHours());
+console.log(log.filter());
+console.log(log.workHours());
 
 
 
@@ -168,13 +196,27 @@ Employee.prototype.performanceLevel = function(){
     }
 
 Employee.prototype.newFeedback = function(feedback){
+  
 
+    if(this.averageScore >=90){
+        return feedback
+    }
+    else if(this.averageScore >= 60 && this.averageScore <90){
+        return feedback
+    }
+    else
+        return feedback
 }
+
+
+    // }
 
 const employee = new Employee(23456,"Ken",{communication:50,efficiency:30,reliability:70},["Very helpful","Easy to use","Very nice"])
 
-// console.log(employee.averageScore());
-// console.log(employee.performanceLevel());
+console.log(employee.averageScore());
+console.log(employee.performanceLevel());
+console.log(employee.newFeedback("Bad app"));
+
 
 
 
@@ -202,6 +244,7 @@ return complete
 
 
 
-const course = new Course("Java Script", {name:"Hunter",expertise:"technical skills"},[{name:"Geremy",completionStatus:"Complete"},{name:"Abby",completionStatus:"Complete"},{name:"Hellen",completionStatus:"Not complete"}])
+const course = new Course("Java Script", {name:"Hunter",expertise:"frontend"},[{name:"Geremy",completionStatus:"Complete"},{name:"Abby",completionStatus:"Complete"},{name:"Hellen",completionStatus:"Not complete"}])
+const course2 = new Course("Python", {name:"James", expertise:"backend"},[{name:"Geremy",completionStatus:"Complete"},{name:"Abby",completionStatus:"Complete"},{name:"Hellen",completionStatus:"Not complete"}])
 
-// console.log(course.completed());
+console.log(course.completed());
